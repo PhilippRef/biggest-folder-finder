@@ -1,11 +1,11 @@
 package org.example;
 
 import java.io.File;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.concurrent.ForkJoinPool;
 
 public class Main {
+    private static char[] sizeMultipliers = {'B', 'K', 'M', 'G', 'T'};
     public static void main(String[] args) {
 
 
@@ -14,6 +14,9 @@ public class Main {
 //
 //        thread.start(); //запускаем потоки
 //        thread2.start();
+
+        System.out.println(getHumanReadableSize(1025));
+        System.exit(0); //на этой строке завершается программа
 
         System.out.println(getSizeFromHumanReadable("235K"));
         System.exit(0); //на этой строке завершается программа
@@ -32,7 +35,6 @@ public class Main {
         long duration = System.currentTimeMillis() - start;
         System.out.println(duration + " ms");
 
-        System.out.println("экспонент " + Math.getExponent(5000 / 1024));
 
     }
 
@@ -49,20 +51,13 @@ public class Main {
     }
 
     public static String getHumanReadableSize(long size) {
-        int index = Math.getExponent(size / 1024);
-        if (index < 10) {
-            double value = size / 1024;
-            System.out.printf("%.2f Kb\n", value);
-        }
-        if (index >= 10 && index < 20) {
-            double value = size / Math.pow(1024, 2);
-            System.out.printf("%.2f Mb\n", value);
-        }
-        if (index >= 20 && index < 30) {
-            double value = size / Math.pow(1024, 3);
-            System.out.printf("%.2f Gb\n", value);
-        }
-        return "";
+            for (int i = 0; i < sizeMultipliers.length; i++) {
+                double value = size / Math.pow(1024, i);
+                if(value < 1024) {
+                    return Math.round (value) + "" + sizeMultipliers[i] + (i > 0 ? "b" : "");
+                }
+            }
+            return "Very big";
     }
 
     public static long getSizeFromHumanReadable(String size) {
@@ -76,10 +71,9 @@ public class Main {
     }
 
     private static HashMap<Character, Integer> getMultipliers() {
-        char[] multipliers = {'B', 'K', 'M', 'G', 'T'};
         HashMap<Character, Integer> char2multiplier = new HashMap<>();
-        for (int i = 0; i < multipliers.length; i++) {
-            char2multiplier.put(multipliers[i], (int) Math.pow(1024, i));
+        for (int i = 0; i < sizeMultipliers.length; i++) {
+            char2multiplier.put(sizeMultipliers[i], (int) Math.pow(1024, i));
         }
         return char2multiplier;
     }
