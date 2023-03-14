@@ -13,6 +13,7 @@ public class Main {
 //
 //        thread.start(); //запускаем потоки
 //        thread2.start();
+
         ParametersBag bag = new ParametersBag(args);
 
         String folderPath = bag.getPath();
